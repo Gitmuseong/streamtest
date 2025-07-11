@@ -20,7 +20,7 @@ name = st.text_input("이름을 입력하세요")
 age = st.number_input("나이를 입력하세요", min_value=0, max_value=120, step=1)
 
 # 3. 라디오 버튼
-favorite_color = st.radio("좋아하는 색을 선택하세요", ["빨강", "파랑", "노랑"], horizontal=True)
+favorite_color = st.radio("좋아하는 색을 선택하세요", ["빨강", "보라", "초록"], horizontal=True)
 
 # 4. 셀렉트 박스
 hobby = st.selectbox("취미를 선택하세요", ["독서", "운동", "음악", "게임", "기타"])
