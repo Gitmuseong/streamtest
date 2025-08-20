@@ -1,1 +1,8 @@
-st.write("이것은 기본 텍스트 출력입니다.")
+import streamlit as st
+st.set_page_config(
+    page_title="정보과학",
+    layout="centered"
+)
+
+st.title("정보과")
+
