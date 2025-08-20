@@ -1,7 +1,6 @@
 import streamlit as st
 st.set_page_config(page_title="이상형 월드컵", layout="centered")
 st.title("이승민 이상형 월드컵")
-import streamlit as st
 import random
 
 st.set_page_config(page_title="이승민 동물상 이상형 월드컵", page_icon="🐾", layout="centered")
