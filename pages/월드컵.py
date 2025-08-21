@@ -1,8 +1,5 @@
 import streamlit as st
 import random
-
-st.set_page_config(page_title="이승민 닮은꼴 이상형 월드컵", layout="centered")
-
 # --- 후보 데이터 ---
 animals = [
     "강아지 🐶",
@@ -56,9 +53,8 @@ if not st.session_state.finished:
         else:
             random.shuffle(st.session_state.winners)
             st.session_state.pairs = [
-                (st.session_state.winners[i], st.session_state.winners[i+1])
+                (st.session_state.winners[i], st.session_state.winners[i+1])]
                 for i in range(0, len(st.session_state.winners), 2)
-            ]
             st.session_state.winners = []
             st.session_state.round += 1
             st.rerun()
