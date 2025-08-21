@@ -1,58 +1,48 @@
 import streamlit as st
 import random
 
-st.title("🐾 씅민이 동물상 이상형 월드컵 🐾")
+st.title("🐯 상원고 3학년 9반 이승민 닮은 동물 이상형 월드컵 🐼")
 
-# 세션 상태 초기화
-if "candidates" not in st.session_state:
-    st.session_state.candidates = [
-        "강아지상", "고양이상", "여우상", "판다상",
-        "토끼상", "곰상", "부엉이상", "호랑이상"
-    ]
-if "round" not in st.session_state:
-    st.session_state.round = 1
+# 동물 후보 리스트
+animals = [
+    "🐶 강아지", "🐱 고양이", "🦊 여우", "🐯 호랑이",
+    "🐼 판다", "🐧 펭귄", "🐸 개구리", "🦁 사자",
+    "🐰 토끼", "🐻 곰", "🐨 코알라", "🦉 부엉이"
+]
+
 if "pairs" not in st.session_state:
-    random.shuffle(st.session_state.candidates)
-    st.session_state.pairs = [
-        st.session_state.candidates[i:i+2]
-        for i in range(0, len(st.session_state.candidates), 2)
-    ]
-if "winners" not in st.session_state:
+    random.shuffle(animals)
+    st.session_state.pairs = [(animals[i], animals[i+1]) for i in range(0, len(animals), 2)]
+    st.session_state.round = 1
     st.session_state.winners = []
+    st.session_state.finished = False
 
-st.write(f"### Round {st.session_state.round}")
+st.subheader(f"Round {st.session_state.round}")
 
-# 현재 대진 표시
-if st.session_state.pairs:
-    pair = st.session_state.pairs[0]
-    st.write("다음 두 동물상 중 하나를 고르세요!")
-    col1, col2 = st.columns(2)
-
-    with col1:
-        if st.button(pair[0]):
-            st.session_state.winners.append(pair[0])
-            st.session_state.pairs.pop(0)
-            st.experimental_rerun()
-    with col2:
-        if st.button(pair[1]):
-            st.session_state.winners.append(pair[1])
-            st.session_state.pairs.pop(0)
-            st.experimental_rerun()
+if st.session_state.finished:
+    st.success(f"🏆 최종 승자는 {st.session_state.winners[0]} 입니다! 🎉")
 else:
-    # 라운드 종료 → 승자 모아 다음 라운드
-    if len(st.session_state.winners) == 1:
-        st.success(f"🎉 최종 결과: 이승민은 **{st.session_state.winners[0]}** 닮았어요! 🎉")
-        if st.button("다시 하기"):
-            for key in ["candidates", "round", "pairs", "winners"]:
-                st.session_state.pop(key, None)
-            st.experimental_rerun()
-    else:
-        st.session_state.round += 1
-        random.shuffle(st.session_state.winners)
-        st.session_state.pairs = [
-            st.session_state.winners[i:i+2]
-            for i in range(0, len(st.session_state.winners), 2)
-        ]
-        st.session_state.candidates = st.session_state.winners.copy()
-        st.session_state.winners = []
-        st.experimental_rerun()
+    for i, (a, b) in enumerate(st.session_state.pairs):
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button(a, key=f"a_{i}"):
+                st.session_state.winners.append(a)
+                if len(st.session_state.winners) == len(st.session_state.pairs):
+                    st.session_state.pairs = [(st.session_state.winners[i], st.session_state.winners[i+1]) 
+                                              for i in range(0, len(st.session_state.winners), 2)]
+                    st.session_state.round += 1
+                    st.session_state.winners = []
+                    if len(st.session_state.pairs) == 1:
+                        st.session_state.finished = True
+                st.rerun()
+        with col2:
+            if st.button(b, key=f"b_{i}"):
+                st.session_state.winners.append(b)
+                if len(st.session_state.winners) == len(st.session_state.pairs):
+                    st.session_state.pairs = [(st.session_state.winners[i], st.session_state.winners[i+1]) 
+                                              for i in range(0, len(st.session_state.winners), 2)]
+                    st.session_state.round += 1
+                    st.session_state.winners = []
+                    if len(st.session_state.pairs) == 1:
+                        st.session_state.finished = True
+                st.rerun()
