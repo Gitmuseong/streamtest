@@ -28,40 +28,12 @@ st.title("🐾 이승민 닮은 동물 이상형 월드컵 🐾")
 st.write(f"**{st.session_state.round} 라운드**")
 
 # --- 월드컵 진행 ---
-if not st.session_state.finished:
-    if st.session_state.pairs:
-        left, right = st.session_state.pairs[0]
-        col1, col2 = st.columns(2)
-
-        # 왼쪽 버튼 클릭
-        with col1:
-            if st.button(left, key=f"left_{st.session_state.round}_{len(st.session_state.pairs)}"):
-                if left not in st.session_state.winners:
-                    st.session_state.winners.append(left)
-                st.session_state.pairs.pop(0)
-                st.rerun()
-
-        # 오른쪽 버튼 클릭
-        with col2:
-            if right:
-                if st.button(right, key=f"right_{st.session_state.round}_{len(st.session_state.pairs)}"):
-                    if right not in st.session_state.winners:
-                        st.session_state.winners.append(right)
-                    st.session_state.pairs.pop(0)
-                    st.rerun()
-            else:
-                # 홀수일 경우 자동 진출
-                if left not in st.session_state.winners:
-                    st.session_state.winners.append(left)
-                st.session_state.pairs.pop(0)
-                st.rerun()
-    else:
-        # 다음 라운드 준비
+def next_pair():
+    """다음 라운드 혹은 매치로 넘어가기"""
+    if len(st.session_state.pairs) == 0:
         if len(st.session_state.winners) == 1:
             st.session_state.finished = True
-            st.rerun()
         else:
-            # 중복 제거 + 무결성 확보
             next_round = list(dict.fromkeys(st.session_state.winners))
             st.session_state.winners = []
             random.shuffle(next_round)
@@ -70,10 +42,32 @@ if not st.session_state.finished:
                 for i in range(0, len(next_round), 2)
             ]
             st.session_state.round += 1
-            st.rerun()
-else:
+
+if not st.session_state.finished and st.session_state.pairs:
+    left, right = st.session_state.pairs[0]
+    col1, col2 = st.columns(2)
+
+    clicked = None
+
+    with col1:
+        if st.button(left):
+            clicked = left
+    with col2:
+        if right and st.button(right):
+            clicked = right
+
+    # 버튼 클릭 시 처리
+    if clicked:
+        if clicked not in st.session_state.winners:
+            st.session_state.winners.append(clicked)
+        st.session_state.pairs.pop(0)
+        next_pair()
+        st.experimental_rerun()
+
+# --- 결과 ---
+if st.session_state.finished:
     st.success(f"🏆 최종 우승: **{st.session_state.winners[0]}**")
     if st.button("다시 시작하기"):
         for key in list(st.session_state.keys()):
             del st.session_state[key]
-        st.rerun()
+        st.experimental_rerun()
