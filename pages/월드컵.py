@@ -3,7 +3,7 @@ st.set_page_config(page_title="이상형 월드컵", layout="centered")
 st.title("이승민 이상형 월드컵")
 import random
 
-st.set_page_config(page_title="이승민 동물상 이상형 월드컵", page_icon="🐾", layout="centered")
+st.set_page_config(page_title="승민이 동물상 이상형 월드컵", page_icon="🐾", layout="centered")
 
 # 초기 후보 (이모지 기반 동물상)
 DEFAULT_ANIMALS = [
