@@ -1,26 +1,20 @@
 import streamlit as st
 import random
 
-# --- 후보 데이터 ---
+# 후보 데이터
 animals = [
-    "강아지 🐶",
-    "고양이 🐱",
-    "토끼 🐰",
-    "곰 🐻",
-    "판다 🐼",
-    "여우 🦊",
-    "부엉이 🦉",
-    "펭귄 🐧",
-    "기린 🦒"
+    "강아지 🐶", "고양이 🐱", "토끼 🐰", "곰 🐻",
+    "판다 🐼", "여우 🦊", "부엉이 🦉", "펭귄 🐧", "기린 🦒"
 ]
 
-# --- 세션 상태 초기화 ---
+# 세션 상태 초기화
 if "round" not in st.session_state:
     st.session_state.round = 1
 if "pairs" not in st.session_state:
     shuffled = animals.copy()
     random.shuffle(shuffled)
-    st.session_state.pairs = [(shuffled[i], shuffled[i+1]) for i in range(0, len(shuffled), 2)]
+    st.session_state.pairs = [(shuffled[i], shuffled[i+1] if i+1 < len(shuffled) else None)
+                              for i in range(0, len(shuffled), 2)]
 if "winners" not in st.session_state:
     st.session_state.winners = []
 if "finished" not in st.session_state:
@@ -29,7 +23,7 @@ if "finished" not in st.session_state:
 st.title("🐾 이승민 닮은 동물 이상형 월드컵 🐾")
 st.write(f"**{st.session_state.round} 라운드**")
 
-# --- 월드컵 진행 ---
+# 월드컵 진행
 if not st.session_state.finished:
     if st.session_state.pairs:
         left, right = st.session_state.pairs[0]
@@ -42,8 +36,14 @@ if not st.session_state.finished:
                 st.rerun()
 
         with col2:
-            if st.button(right, key=f"right_{st.session_state.round}_{len(st.session_state.pairs)}"):
-                st.session_state.winners.append(right)
+            if right:
+                if st.button(right, key=f"right_{st.session_state.round}_{len(st.session_state.pairs)}"):
+                    st.session_state.winners.append(right)
+                    st.session_state.pairs.pop(0)
+                    st.rerun()
+            else:
+                # 홀수일 경우 자동 진출
+                st.session_state.winners.append(left)
                 st.session_state.pairs.pop(0)
                 st.rerun()
     else:
@@ -54,7 +54,7 @@ if not st.session_state.finished:
         else:
             random.shuffle(st.session_state.winners)
             st.session_state.pairs = [
-                (st.session_state.winners[i], st.session_state.winners[i+1])
+                (st.session_state.winners[i], st.session_state.winners[i+1] if i+1 < len(st.session_state.winners) else None)
                 for i in range(0, len(st.session_state.winners), 2)
             ]
             st.session_state.winners = []
