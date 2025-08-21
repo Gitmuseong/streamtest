@@ -1,5 +1,6 @@
 import streamlit as st
 import random
+
 # --- 후보 데이터 ---
 animals = [
     "강아지 🐶",
@@ -9,7 +10,7 @@ animals = [
     "판다 🐼",
     "여우 🦊",
     "부엉이 🦉",
-    "펭귄 🐧"
+    "펭귄 🐧",
     "기린 🦒"
 ]
 
@@ -53,8 +54,9 @@ if not st.session_state.finished:
         else:
             random.shuffle(st.session_state.winners)
             st.session_state.pairs = [
-                (st.session_state.winners[i], st.session_state.winners[i+1]
-                ,for i in range(0, len(st.session_state.winners), 2)]
+                (st.session_state.winners[i], st.session_state.winners[i+1])
+                for i in range(0, len(st.session_state.winners), 2)
+            ]
             st.session_state.winners = []
             st.session_state.round += 1
             st.rerun()
