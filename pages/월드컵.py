@@ -53,7 +53,7 @@ if not st.session_state.finished:
         else:
             random.shuffle(st.session_state.winners)
             st.session_state.pairs = [
-                (st.session_state.winners[i], st.session_state.winners[i+1])
+                (st.session_state.winners[i], st.session_state.winners[i+1]
                 for i in range(0, len(st.session_state.winners), 2)]
             st.session_state.winners = []
             st.session_state.round += 1
